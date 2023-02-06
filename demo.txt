@@ -1,0 +1,58 @@
+HTML
+==================
+
+<body onLoad="fetchTableData()">
+<table id="empTable" border="1"/>
+</body>
+
+==================
+
+JScript:
+==============
+function fetchTableData() {
+
+  let url = 'https://apex.oracle.com/pls/apex/oraclejet/emp/';
+  fetch(url)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(json_resp) {
+			
+      //convert response to json
+      var json_str = JSON.stringify(json_resp);
+      //get items from json response
+      var records = JSON.parse(json_str).items;
+      
+      //preparing table header
+      var columns = ['EmpNo', 'Ename'];
+      var header = $('<tr/>');
+      $.each(columns, function(i, item) {
+        header.append($('<th/>').html(item));
+      })
+			//appending table header
+      $("#empTable").append(header);
+
+			
+      $.each(records, function(i, item) {
+        //preparing table row
+        var tabledata = $('<tr/>');
+        tabledata.append($('<td/>').html(item.empno));
+        tabledata.append($('<td/>').html(item.ename));
+        
+        //appending table row to table
+        $("#empTable").append(tabledata);
+        
+      });
+    })
+}
+
+===================================
+CSS
+==========
+
+th {
+    font-weight : bold
+}
+th, td {
+  padding: 10px;
+}
